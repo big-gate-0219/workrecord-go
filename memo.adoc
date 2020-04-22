@@ -1,0 +1,26 @@
+= memo
+
+
+== APIs
+
+
+
+
+.APIs
+[cols="1,3,5,2,2"]
+|====
+| 未済 | ドメイン | 機能 | URI | Method
+| x | アカウント | サインイン | /accounts/signin | POST
+|  |  | サインアウト | /accounts/signout | POST
+|  |  | サインアップ | /accounts/signup | POST
+| x | 勤務表 | 勤務表取得（個人、今月） | /workrecords | GET
+|  |  | 勤務表取得（個人、年月指定） | /workrecords/:year/:month | GET
+| x |  | 勤務開始（個人、今日） | /workrecords/today/start | POST
+| x |  | 勤務終了（個人、今日） | /workrecords/today/end | POST
+|  |  | 勤務表取得（人指定、今日） | /workrecords/users/:id | GET
+|  |  | 勤務表取得（人指定、年月指定） | /workrecords/users/:id/:year/:month | GET
+| x |  | 勤務表取得（グループ指定、今日） | /workrecords/groups/:id/today | GET
+|  | | 勤務表取得（グループ指定、年月指定） | /workrecords/groups/:id/:year/:month | GET
+|  | | 勤務表取得（グループ指定、日付指定） | /workrecords/groups/:id/:year/:month/:day | GET
+| x | グループ | グループ一覧取得 | /groups/ | GET
+| x | | グループ一覧取得（グループ指定） | /groups/:group_id | GET
