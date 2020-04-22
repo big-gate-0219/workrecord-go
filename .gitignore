@@ -1,1 +1,4 @@
+db/**
 **/go.sum
+src/tmp
+result.json
