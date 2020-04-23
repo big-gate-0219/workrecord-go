@@ -24,6 +24,14 @@ cd src
 go run ./tools/migration.go
 ```
 
+## workrecord-goの起動
+
+```bash
+{$GOPATH}/bin/fresh
+```
+
+## Memo
+
 ```bash
 docker image build -t workrecord-go:0.1.0 .
 docker run -it --rm --name go-realizer -p 8080:8080 -v ./src:/go/src/app workrecord-go:1.0
