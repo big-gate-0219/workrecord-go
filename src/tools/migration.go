@@ -42,7 +42,7 @@ func main() {
 	db.Debug().Create(&group3)
 
 	db.Debug().AutoMigrate(&models.GroupUser{})
-	db.Debug().Unscoped().Delete(&models.Group{})
+	db.Debug().Unscoped().Delete(&models.GroupUser{})
 	groupUser1_1 := models.GroupUser{GroupId:group1.ID, UserId:user1.ID}
 	groupUser1_2 := models.GroupUser{GroupId:group1.ID, UserId:user2.ID}
 	groupUser1_4 := models.GroupUser{GroupId:group1.ID, UserId:user4.ID}
