@@ -1,6 +1,12 @@
 #!/bin/bash
 
+# Signup
+echo "##### Signup"
+curl -s -X POST http://127.0.0.1:8080/api/accounts/signup -H 'Content-Type:application/json' -d '{"userId":"dummy","email":"dummy@dummy.com", "userName":"dummy dummy", "password":"password"}' > result.json
+cat result.json
+
 # Signin
+echo ""
 echo "##### Signin"
 curl -s -X POST http://127.0.0.1:8080/api/accounts/signin -H 'Content-Type:application/json' -d '{"name":"test1@mail.com","Password":"password"}' > result.json
 cat result.json

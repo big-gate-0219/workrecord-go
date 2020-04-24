@@ -13,6 +13,7 @@ func Init(e *echo.Echo) {
 		accountsGroup := apiGroup.Group("/accounts")
 		{
 			accountsGroup.POST("/signin", api.SignIn())
+			accountsGroup.POST("/signup", api.SignUp())
 		}
 
 		workrecordGroup := apiGroup.Group("/work-records", middlewares.AuthenticationGuard())
