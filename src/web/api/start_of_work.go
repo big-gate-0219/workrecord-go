@@ -32,7 +32,7 @@ func StartOfWork() echo.HandlerFunc {
 			workrecord = models.WorkRecord{UserId: user.ID, Date: today, StartOfWork: currentTime}
 			dbs.DB.Create(&workrecord)
 		} else {
-			dbs.DB.Model(&workrecord).UpdateColumns(models.WorkRecord{StartOfWork: currentTime})
+			dbs.DB.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord)
 		}
 
 		response := StartOfWorkResponse{Status: "SUCCESS", User: user, WorkRecord: workrecord}
