@@ -3,6 +3,9 @@ package api
 import (
 	"models"
 	"middlewares"
+	"crypto/sha256"
+	"encoding/hex"
+	"strings"
 	"github.com/labstack/echo"
 	"github.com/valyala/fasthttp"
 )
@@ -27,12 +30,16 @@ func SignUp() echo.HandlerFunc {
 			return err
 		}
 
+		password_seed := request.UID + ":" + request.Password
+		password_sum256 := sha256.Sum256([]byte(password_seed))
+		password_hex := strings.ToUpper(hex.EncodeToString(password_sum256[:]))
+
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		user := models.User{
 			UID: request.UID,
 			MailAddress: request.MailAddress,
 			Name: request.Name,
-			Password: request.Password,
+			Password: password_hex,
 		}
 
 		dbs.DB.Create(&user)
