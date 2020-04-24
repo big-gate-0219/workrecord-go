@@ -8,7 +8,7 @@ import (
 )
 
 type SignInRequest struct {
-	UID      string `json:"name"`
+	UID      string `json:"user_id"`
 	Password string `json:"password"`
 }
 
@@ -25,7 +25,7 @@ func SignIn() echo.HandlerFunc {
 
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		user := models.User{}
-		if dbs.DB.Table("users").Where(models.User{UID: request.UID, Password: request.Password}).First(&user).RecordNotFound() {
+		if dbs.DB.Table("users").Where(&models.User{UID: request.UID, Password: request.Password}).First(&user).RecordNotFound() {
 			return c.JSON(fasthttp.StatusUnauthorized, "ユーザ名もしくはパスワードが間違っています。")
 		}
 
