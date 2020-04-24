@@ -30,6 +30,7 @@ func Init(e *echo.Echo) {
 		groupGroup := apiGroup.Group("/groups", middlewares.AuthenticationGuard())
 		{
 			groupGroup.GET("", api.GetMyGroups())
+			groupGroup.POST("", api.AddGroup())
 			groupGroup.GET("/:group_id", api.GetGroupUsers())
 		}
 	}
