@@ -1,6 +1,9 @@
 package api
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"strings"
 	"github.com/labstack/echo"
 	"github.com/valyala/fasthttp"
 	"middlewares"
@@ -23,9 +26,13 @@ func SignIn() echo.HandlerFunc {
 			return err
 		}
 
+		password_seed := request.UID + ":" + request.Password
+		password_sum256 := sha256.Sum256([]byte(password_seed))
+		password_hex := strings.ToUpper(hex.EncodeToString(password_sum256[:]))
+
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		user := models.User{}
-		if dbs.DB.Table("users").Where(&models.User{UID: request.UID, Password: request.Password}).First(&user).RecordNotFound() {
+		if dbs.DB.Table("users").Where(&models.User{UID: request.UID, Password: password_hex}).First(&user).RecordNotFound() {
 			return c.JSON(fasthttp.StatusUnauthorized, "ユーザ名もしくはパスワードが間違っています。")
 		}
 
