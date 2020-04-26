@@ -48,3 +48,9 @@ echo ""
 echo "#### Get group users"
 curl -s -X POST http://127.0.0.1:8080/api/groups -H "x-auth-token: $jwt_token" -H 'Content-Type:application/json' -d  '{"group_name":"dummygroup","a":"a"}' > result.json
 cat result.json
+
+# fetch users
+echo ""
+echo "#### Fetch users"
+curl -s -X GET http://127.0.0.1:8080/api/accounts?q=test -H "x-auth-token: $jwt_token" > result.json
+cat result.json

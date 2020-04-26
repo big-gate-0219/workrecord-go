@@ -12,6 +12,7 @@ func Init(e *echo.Echo) {
 	{
 		accountsGroup := apiGroup.Group("/accounts")
 		{
+			accountsGroup.GET("", api.FetchAccounts())
 			accountsGroup.POST("/signin", api.SignIn())
 			accountsGroup.POST("/signup", api.SignUp())
 		}
