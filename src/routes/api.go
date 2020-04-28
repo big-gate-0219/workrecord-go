@@ -33,6 +33,7 @@ func Init(e *echo.Echo) {
 			groupGroup.GET("", api.GetMyGroups())
 			groupGroup.POST("", api.AddGroup())
 			groupGroup.GET("/:group_id", api.GetGroupUsers())
+			groupGroup.POST("/:group_id/add-member", api.AddUserToGroup())
 		}
 	}
 
