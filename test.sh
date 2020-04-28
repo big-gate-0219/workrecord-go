@@ -8,7 +8,7 @@ cat result.json
 # Signin
 echo ""
 echo "##### Signin"
-curl -s -X POST http://127.0.0.1:8080/api/accounts/signin -H 'Content-Type:application/json' -d '{"name":"test1@mail.com","Password":"password"}' > result.json
+curl -s -X POST http://127.0.0.1:8080/api/accounts/signin -H 'Content-Type:application/json' -d '{"user_id":"test1@mail.com","password":"password"}' > result.json
 cat result.json
 jwt_token=`cat result.json | grep "token" | sed -e 's/{"token":"//' -e 's/"}//'`
 
@@ -36,7 +36,12 @@ cat result.json
 # get workrecords group today
 echo ""
 echo "#### Get workrecord group today"
-curl -s -X GET  http://127.0.0.1:8080/api/work-records/groups/1/today -H "x-auth-token: $jwt_token"
+curl -s -X GET  http://127.0.0.1:8080/api/work-records/groups/7/today -H "x-auth-token: $jwt_token"
+
+# get workrecords group
+echo ""
+echo "#### Get workrecord group"
+curl -s -X GET  http://127.0.0.1:8080/api/work-records/groups/7/2020/04/24 -H "x-auth-token: $jwt_token"
 
 # get group users
 echo ""
