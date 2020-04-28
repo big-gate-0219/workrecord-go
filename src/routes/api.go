@@ -26,6 +26,7 @@ func Init(e *echo.Echo) {
 				todayGroup.POST("/end", api.EndOfWork())
 			}
 			workrecordGroup.GET("/groups/:group_id/today", api.GetWorkrecordGroupToday())
+			workrecordGroup.GET("/groups/:group_id/:year/:month/:day", api.GetGroupWorkrecord())
 		}
 
 		groupGroup := apiGroup.Group("/groups", middlewares.AuthenticationGuard())
