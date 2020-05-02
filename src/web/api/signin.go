@@ -21,11 +21,6 @@ type SignInResponse struct {
 	Token string `json:"token"`
 }
 
-type ErrorResponse struct {
-	Status string           `json:"status"`
-	Errors []validate.Error `json:"errors"`
-}
-
 func SignIn() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		request := new(SignInRequest)
@@ -33,10 +28,8 @@ func SignIn() echo.HandlerFunc {
 			return c.JSON(fasthttp.StatusBadRequest, err)
 		}
 		if err := c.Validate(request); err != nil {
-			errResponse := ErrorResponse{
-				Status: "Error",
-				Errors: validate.TranslateError(err.(validator.ValidationErrors)),
-			}
+			validateError := validate.TranslateError(err.(validator.ValidationErrors))
+			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
 		}
 
@@ -47,13 +40,8 @@ func SignIn() echo.HandlerFunc {
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		user := models.User{}
 		if dbs.DB.Table("users").Where(&models.User{UID: request.UID, Password: password_hex}).First(&user).RecordNotFound() {
-			validateError := []validate.Error{
-				validate.CreateError("unauthorized", "user_id+password"),
-			}
-			errResponse := ErrorResponse{
-				Status: "Error",
-				Errors: validateError,
-			}
+			validateError := validate.CreateSingleErrors("unauthorized", "user_id+password")
+			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusUnauthorized, errResponse)
 		}
 

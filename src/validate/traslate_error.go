@@ -9,6 +9,11 @@ type Error struct {
 	Field   string `json:"field"`
 }
 
+type ErrorResponse struct {
+	Status string           `json:"status"`
+	Errors []Error `json:"errors"`
+}
+
 func TranslateError(errs validator.ValidationErrors) []Error {
 	result := []Error{}
 	for _, err := range errs {
@@ -23,4 +28,12 @@ func TranslateError(errs validator.ValidationErrors) []Error {
 
 func CreateError(errorType string, errorField string) Error {
 	return Error{Type: errorType, Field: errorField}
+}
+
+func  CreateSingleErrors(errorType string, errorField string) []Error {
+	return []Error{CreateError(errorType, errorField)}
+}
+
+func CreateErrorResponse(errs []Error) ErrorResponse {
+	return ErrorResponse{Status: "Error", Errors: errs}
 }
