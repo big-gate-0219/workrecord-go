@@ -5,8 +5,9 @@ import (
 )
 
 type Error struct {
-	Type    string `json:"type"`
 	Field   string `json:"field"`
+	Type    string `json:"type"`
+	Param string `json:"param"`
 }
 
 type ErrorResponse struct {
@@ -20,6 +21,7 @@ func TranslateError(errs validator.ValidationErrors) []Error {
 		error := Error{
 			Field: err.Field(),
 			Type:  err.Tag(),
+			Param: err.Param(),
 		}
 		result = append(result, error)
 	}
