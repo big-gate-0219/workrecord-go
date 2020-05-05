@@ -7,6 +7,7 @@ replace (
 	middlewares => ./middlewares
 	models => ./models
 	routes => ./routes
+	validate => ./validate
 	web/api => ./web/api
 
 )
@@ -14,6 +15,7 @@ replace (
 require (
 	databases v0.0.0-00010101000000-000000000000 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/go-playground/validator/v10 v10.2.0
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/jinzhu/gorm v1.9.12 // indirect
 	github.com/joho/godotenv v1.3.0
@@ -25,9 +27,11 @@ require (
 	github.com/sirupsen/logrus v1.5.0
 	github.com/valyala/fasthttp v1.9.0 // indirect
 	golang.org/x/crypto v0.0.0-20200406173513-056763e48d71 // indirect
+	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect
 	middlewares v0.0.0-00010101000000-000000000000
 	models v0.0.0-00010101000000-000000000000 // indirect
 	routes v0.0.0-00010101000000-000000000000
 	rsc.io/quote v1.5.2
+	validate v0.0.0-00010101000000-000000000000
 	web/api v0.0.0-00010101000000-000000000000 // indirect
 )

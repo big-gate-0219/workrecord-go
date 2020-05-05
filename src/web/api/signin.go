@@ -3,16 +3,18 @@ package api
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"strings"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
 	"github.com/valyala/fasthttp"
 	"middlewares"
 	"models"
+	"strings"
+	"validate"
 )
 
 type SignInRequest struct {
-	UID      string `json:"user_id"`
-	Password string `json:"password"`
+	UID      string `json:"user_id" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type SignInResponse struct {
@@ -23,7 +25,12 @@ func SignIn() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		request := new(SignInRequest)
 		if err := c.Bind(request); err != nil {
-			return err
+			return c.JSON(fasthttp.StatusBadRequest, err)
+		}
+		if err := c.Validate(request); err != nil {
+			validateError := validate.TranslateError(err.(validator.ValidationErrors))
+			errResponse := validate.CreateErrorResponse(validateError)
+			return c.JSON(fasthttp.StatusBadRequest, errResponse)
 		}
 
 		password_seed := request.UID + ":" + request.Password
@@ -33,7 +40,9 @@ func SignIn() echo.HandlerFunc {
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		user := models.User{}
 		if dbs.DB.Table("users").Where(&models.User{UID: request.UID, Password: password_hex}).First(&user).RecordNotFound() {
-			return c.JSON(fasthttp.StatusUnauthorized, "ユーザ名もしくはパスワードが間違っています。")
+			validateError := validate.CreateSingleErrors("unauthorized", "user_id+password")
+			errResponse := validate.CreateErrorResponse(validateError)
+			return c.JSON(fasthttp.StatusUnauthorized, errResponse)
 		}
 
 		tokenString, _ := middlewares.Generate(user)

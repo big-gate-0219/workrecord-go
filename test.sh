@@ -51,6 +51,10 @@ curl -s -X GET  http://127.0.0.1:8080/api/groups/1 -H "x-auth-token: $jwt_token"
 # add group
 echo ""
 echo "#### Get group users"
+curl -s -X POST http://127.0.0.1:8080/api/groups -H "x-auth-token: $jwt_token" -H 'Content-Type:application/json' -d  '{}' > result.json
+cat result.json
+curl -s -X POST http://127.0.0.1:8080/api/groups -H "x-auth-token: $jwt_token" -H 'Content-Type:application/json' -d  '{"group_name":"a"}' > result.json
+cat result.json
 curl -s -X POST http://127.0.0.1:8080/api/groups -H "x-auth-token: $jwt_token" -H 'Content-Type:application/json' -d  '{"group_name":"dummygroup","a":"a"}' > result.json
 cat result.json
 
