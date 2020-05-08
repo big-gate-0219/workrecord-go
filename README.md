@@ -24,15 +24,15 @@ cd src
 go run ./tools/migration.go
 ```
 
-## workrecord-goの起動
+## workrecord-go起動（Local）
 
 ```bash
 {$GOPATH}/bin/fresh
 ```
 
-## Memo
+## workrecord-go起動（Docker）
 
 ```bash
-docker image build -t workrecord-go:0.1.0 .
-docker run -it --rm --name go-realizer -p 8080:8080 -v ./src:/go/src/app workrecord-go:1.0
+docker image build -t workrecord-go:0.2.0 .
+docker run -it --rm -p 8080:8080 --link mysqld --name workrecord-go workrecord-go:0.2.0
 ```
