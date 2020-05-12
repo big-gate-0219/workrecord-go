@@ -22,7 +22,8 @@ func EndOfWork() echo.HandlerFunc {
 		user := models.User{}
 		dbs.DB.Table("users").Where(models.User{ID: auth.ID}).First(&user)
 
-		jst, _ := time.LoadLocation("Asia/Tokyo")
+		time.Local = time.FixedZone("Local", 9*60*60)
+		jst, _ := time.LoadLocation("Local")
 		date := time.Now().In(jst)
 		today := date.Format("2006-01-02")
 		currentTime := date.Format("15:04")

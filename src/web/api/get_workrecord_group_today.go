@@ -26,7 +26,9 @@ func GetWorkrecordGroupToday() echo.HandlerFunc {
 
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 
-		today := time.Now().Format("2006-01-02")
+		time.Local = time.FixedZone("Local", 9*60*60)
+		jst, _ := time.LoadLocation("Local")
+		today := time.Now().In(jst).Format("2006-01-02")
 
 
 		group := models.Group{}
