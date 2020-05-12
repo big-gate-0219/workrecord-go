@@ -19,7 +19,9 @@ func GetWorkRecord() echo.HandlerFunc {
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		auth := c.Get("auth").(*models.User)
 
-		date := time.Now()
+		time.Local = time.FixedZone("Local", 9*60*60)
+		jst, _ := time.LoadLocation("Local")
+		date := time.Now().In(jst)
 		todayYearMonth := date.Format("2006-01")
 
 		user := models.User{}
