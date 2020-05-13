@@ -20,7 +20,7 @@ func EndOfWork() echo.HandlerFunc {
 		auth := c.Get("auth").(*models.User)
 
 		user := models.User{}
-		dbs.DB.Table("users").Where(models.User{ID: auth.ID}).First(&user)
+		dbs.Transaction.Table("users").Where(models.User{ID: auth.ID}).First(&user)
 
 		jst, _ := time.LoadLocation("Asia/Tokyo")
 		date := time.Now().In(jst)
@@ -28,11 +28,11 @@ func EndOfWork() echo.HandlerFunc {
 		currentTime := date.Format("15:04")
 
 		workrecord := models.WorkRecord{}
-		if dbs.DB.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord).RecordNotFound() {
+		if dbs.Transaction.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord).RecordNotFound() {
 			workrecord = models.WorkRecord{UserId: user.ID, Date: today, EndOfWork: currentTime}
-			dbs.DB.Create(&workrecord)
+			dbs.Transaction.Create(&workrecord)
 		} else {
-			dbs.DB.Model(&workrecord).UpdateColumns(models.WorkRecord{EndOfWork: currentTime})
+			dbs.Transaction.Model(&workrecord).UpdateColumns(models.WorkRecord{EndOfWork: currentTime})
 		}
 
 		response := EndOfWorkResponse{Status: "SUCCESS", User: user, WorkRecord: workrecord}

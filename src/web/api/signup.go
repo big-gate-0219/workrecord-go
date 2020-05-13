@@ -39,7 +39,7 @@ func SignUp() echo.HandlerFunc {
 
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		u := models.User{}
-		if !dbs.DB.Where(&models.User{UID: request.UID}).First(&u).RecordNotFound() {
+		if !dbs.Transaction.Where(&models.User{UID: request.UID}).First(&u).RecordNotFound() {
 			validateError := validate.CreateSingleErrors("duplicated", "userId")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
@@ -56,7 +56,7 @@ func SignUp() echo.HandlerFunc {
 			Password:    password_hex,
 		}
 
-		dbs.DB.Create(&user)
+		dbs.Transaction.Create(&user)
 		response := SignUpResponse{
 			Status: "SUCCESS",
 			User:   user,

@@ -18,7 +18,7 @@ func FetchAccounts() echo.HandlerFunc {
 
 		query := c.QueryParam("q")
 		users := []models.User{}
-		dbs.DB.Where("uid like ?", "%"+query+"%").Find(&users)
+		dbs.Transaction.Where("uid like ?", "%"+query+"%").Find(&users)
 
 		response := FetchAccountsResponse{
 			Status: "SUCCESS",

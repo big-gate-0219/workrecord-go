@@ -33,18 +33,18 @@ func AddGroup() echo.HandlerFunc {
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 
 		g := models.Group{}
-		if !dbs.DB.Where(&models.Group{Name: request.GroupName}).First(&g).RecordNotFound() {
+		if !dbs.Transaction.Where(&models.Group{Name: request.GroupName}).First(&g).RecordNotFound() {
 			validateError := validate.CreateSingleErrors("duplicated", "group_name")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
 		}
 
 		group := models.Group{Name: request.GroupName}
-		dbs.DB.Create(&group)
+		dbs.Transaction.Create(&group)
 
 		auth := c.Get("auth").(*models.User)
 		groupUser := models.GroupUser{GroupId: group.ID, UserId: auth.ID}
-		dbs.DB.Create(&groupUser)
+		dbs.Transaction.Create(&groupUser)
 
 		response := AddGroupResponse{
 			Status: "SUCCESS",

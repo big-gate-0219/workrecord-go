@@ -24,8 +24,8 @@ func GetWorkRecord() echo.HandlerFunc {
 
 		user := models.User{}
 		workrecords := []models.WorkRecord{}
-		dbs.DB.Where(models.User{ID: auth.ID}).First(&user)
-		dbs.DB.Where("user_id = ?", user.ID).Where("Date like ?", todayYearMonth+"%").Find(&workrecords)
+		dbs.Transaction.Where(models.User{ID: auth.ID}).First(&user)
+		dbs.Transaction.Where("user_id = ?", user.ID).Where("Date like ?", todayYearMonth+"%").Find(&workrecords)
 
 		response := GetWorkRecordResponse{Status: "SUCCESS", User: user, WorkRecords: workrecords}
 
