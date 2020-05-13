@@ -18,15 +18,15 @@ func GetMyGroups() echo.HandlerFunc {
 		auth := c.Get("auth").(*models.User)
 
 		user := models.User{}
-		dbs.DB.Where(models.User{ID: auth.ID}).First(&user)
+		dbs.Transaction.Where(models.User{ID: auth.ID}).First(&user)
 
 		groupUsers := []models.GroupUser{}
-		dbs.DB.Where(models.GroupUser{UserId: user.ID}).Find(&groupUsers)
+		dbs.Transaction.Where(models.GroupUser{UserId: user.ID}).Find(&groupUsers)
 
 		groups := []models.Group{};
 		for _, groupUser := range groupUsers {
 			group := models.Group{}
-			dbs.DB.Where(models.Group{ID: groupUser.GroupId}).First(&group)
+			dbs.Transaction.Where(models.Group{ID: groupUser.GroupId}).First(&group)
 			groups = append(groups, group)
 		}
 

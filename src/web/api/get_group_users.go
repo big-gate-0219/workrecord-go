@@ -20,22 +20,22 @@ func GetGroupUsers() echo.HandlerFunc {
 
 		groupId, _ := strconv.ParseUint(c.Param("group_id"), 10, 64)
 		g := models.Group{}
-		if dbs.DB.Where(&models.Group{ID: groupId}).First(&g).RecordNotFound() {
+		if dbs.Transaction.Where(&models.Group{ID: groupId}).First(&g).RecordNotFound() {
 			validateError := validate.CreateSingleErrors("not_found", "group_id")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
 		}
 
 		group := models.Group{}
-		dbs.DB.Where(models.Group{ID: groupId}).Find(&group)
+		dbs.Transaction.Where(models.Group{ID: groupId}).Find(&group)
 
 		groupUsers := []models.GroupUser{}
-		dbs.DB.Where(models.GroupUser{GroupId: groupId}).Find(&groupUsers)
+		dbs.Transaction.Where(models.GroupUser{GroupId: groupId}).Find(&groupUsers)
 
 		users := []models.User{}
 		for _, groupUser := range groupUsers {
 			user := models.User{}
-			dbs.DB.Where(models.User{ID: groupUser.UserId}).First(&user)
+			dbs.Transaction.Where(models.User{ID: groupUser.UserId}).First(&user)
 			users = append(users, user)
 		}
 

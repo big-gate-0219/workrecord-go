@@ -20,7 +20,7 @@ func StartOfWork() echo.HandlerFunc {
 		auth := c.Get("auth").(*models.User)
 
 		user := models.User{}
-		dbs.DB.Table("users").Where(models.User{ID: auth.ID}).First(&user)
+		dbs.Transaction.Table("users").Where(models.User{ID: auth.ID}).First(&user)
 
 		time.Local = time.FixedZone("Local", 9*60*60)
 		jst, _ := time.LoadLocation("Local")
@@ -29,11 +29,11 @@ func StartOfWork() echo.HandlerFunc {
 		currentTime := date.Format("15:04")
 
 		workrecord := models.WorkRecord{}
-		if dbs.DB.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord).RecordNotFound() {
+		if dbs.Transaction.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord).RecordNotFound() {
 			workrecord = models.WorkRecord{UserId: user.ID, Date: today, StartOfWork: currentTime}
-			dbs.DB.Create(&workrecord)
+			dbs.Transaction.Create(&workrecord)
 		} else {
-			dbs.DB.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord)
+			dbs.Transaction.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workrecord)
 		}
 
 		response := StartOfWorkResponse{Status: "SUCCESS", User: user, WorkRecord: workrecord}

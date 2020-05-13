@@ -31,14 +31,14 @@ func AddUserToGroup() echo.HandlerFunc {
 		}
 
 		group := models.Group{}
-		if dbs.DB.Where(models.Group{ID: groupId}).First(&group).RecordNotFound() {
+		if dbs.Transaction.Where(models.Group{ID: groupId}).First(&group).RecordNotFound() {
 			validateError := validate.CreateSingleErrors("not_found", "groupId")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
 		}
 
 		user := models.User{}
-		if dbs.DB.Where(models.User{ID: request.UserId}).First(&user).RecordNotFound() {
+		if dbs.Transaction.Where(models.User{ID: request.UserId}).First(&user).RecordNotFound() {
 			validateError := validate.CreateSingleErrors("not_found", "user_id")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
@@ -48,7 +48,7 @@ func AddUserToGroup() echo.HandlerFunc {
 			GroupId: group.ID,
 			UserId:  user.ID,
 		}
-		dbs.DB.Create(&groupUser)
+		dbs.Transaction.Create(&groupUser)
 
 		return c.JSON(fasthttp.StatusOK, "")
 	}

@@ -32,19 +32,19 @@ func GetWorkrecordGroupToday() echo.HandlerFunc {
 
 
 		group := models.Group{}
-		dbs.DB.Where(models.Group{ID: groupId}).Find(&group)
+		dbs.Transaction.Where(models.Group{ID: groupId}).Find(&group)
 
 
 		groupUsers := []models.GroupUser{}
-		dbs.DB.Where(models.GroupUser{GroupId: groupId}).Find(&groupUsers)
+		dbs.Transaction.Where(models.GroupUser{GroupId: groupId}).Find(&groupUsers)
 
 		userWorkrecords := []GetWorkrecordGroupTodayResponsePart{};
 		for _, groupUser := range groupUsers {
 			user := models.User{}
-			dbs.DB.Where(models.User{ID: groupUser.UserId}).First(&user)
+			dbs.Transaction.Where(models.User{ID: groupUser.UserId}).First(&user)
 
 			workRecord := models.WorkRecord{}
-			dbs.DB.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workRecord)
+			dbs.Transaction.Where(models.WorkRecord{UserId: user.ID, Date: today}).First(&workRecord)
 			userWorkrecord := GetWorkrecordGroupTodayResponsePart{User: user, WorkRecord: workRecord}
 			userWorkrecords = append(userWorkrecords, userWorkrecord)
 		}

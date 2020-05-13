@@ -39,7 +39,7 @@ func SignIn() echo.HandlerFunc {
 
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		user := models.User{}
-		if dbs.DB.Table("users").Where(&models.User{UID: request.UID, Password: password_hex}).First(&user).RecordNotFound() {
+		if dbs.Transaction.Table("users").Where(&models.User{UID: request.UID, Password: password_hex}).First(&user).RecordNotFound() {
 			validateError := validate.CreateSingleErrors("unauthorized", "user_id+password")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusUnauthorized, errResponse)
