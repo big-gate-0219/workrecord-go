@@ -40,7 +40,7 @@ func SignUp() echo.HandlerFunc {
 		dbs := c.Get("dbs").(*middlewares.DatabaseClient)
 		u := models.User{}
 		if !dbs.Transaction.Where(&models.User{UID: request.UID}).First(&u).RecordNotFound() {
-			validateError := validate.CreateSingleErrors("duplicated", "userId")
+			validateError := validate.CreateSingleErrors("user_id_already_exists", "")
 			errResponse := validate.CreateErrorResponse(validateError)
 			return c.JSON(fasthttp.StatusBadRequest, errResponse)
 		}
